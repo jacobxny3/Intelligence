@@ -1,3 +1,5 @@
+![](https://cdn.modrinth.com/data/cached_images/e204a3fe00b451a804a5a47b39526e8d7a774222.png)
+
 Intelligence slows down your progression in the game by making you gain Intelligence points to craft certain items.
 
 You start off with 10 Intelligence points, and you can gain points (up to 8), by crafting books, bookshelves and more. Every craft you do (excluding books and bookshelves), you may lose 1 - 3 Intelligence points.
