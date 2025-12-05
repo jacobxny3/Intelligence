@@ -1,0 +1,160 @@
+package com.intelligence;
+
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.recipe.input.CraftingRecipeInput;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class CraftingRestrictions {
+    private static final Map<Item, Integer> INTELLIGENCE_REQUIREMENTS = new HashMap<>();
+
+    static {
+        
+        // netherite
+        INTELLIGENCE_REQUIREMENTS.put(Items.NETHERITE_BLOCK, 75);
+
+        // diamond
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_PICKAXE, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_SWORD, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_AXE, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_SHOVEL, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_HOE, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_LEGGINGS, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_CHESTPLATE, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_HELMET, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_BOOTS, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_HORSE_ARMOR, 60);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DIAMOND_BLOCK, 60);
+
+        // iron
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_PICKAXE, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_SWORD, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_AXE, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_HOE, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_SHOVEL, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_HORSE_ARMOR, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_CHESTPLATE, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_LEGGINGS, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_BOOTS, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_HELMET, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_BARS, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_BLOCK, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.CHAIN, 21);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_TRAPDOOR, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_DOOR, 27);
+        INTELLIGENCE_REQUIREMENTS.put(Items.HEAVY_WEIGHTED_PRESSURE_PLATE, 21);
+
+        // gold
+
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_LEGGINGS, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_BOOTS, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_HELMET, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_CHESTPLATE, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_APPLE, 50);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_AXE, 25 );
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_SWORD, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_HORSE_ARMOR, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_HOE, 25 );
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_SHOVEL, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_PICKAXE, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LIGHT_WEIGHTED_PRESSURE_PLATE, 21);
+        INTELLIGENCE_REQUIREMENTS.put(Items.GOLDEN_CARROT, 45);
+
+        // stone
+
+        INTELLIGENCE_REQUIREMENTS.put(Items.STONE_AXE, 13);
+        INTELLIGENCE_REQUIREMENTS.put(Items.STONE_HOE, 13);
+
+        // leather
+
+        INTELLIGENCE_REQUIREMENTS.put(Items.LEATHER_BOOTS, 7);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LEATHER_CHESTPLATE, 7);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LEATHER_HELMET, 7);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LEATHER_LEGGINGS, 7);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LEATHER_HORSE_ARMOR, 7);
+
+
+        // misc
+
+        INTELLIGENCE_REQUIREMENTS.put(Items.ENCHANTING_TABLE, 50);
+        INTELLIGENCE_REQUIREMENTS.put(Items.ANVIL, 45);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BREWING_STAND, 45);
+        INTELLIGENCE_REQUIREMENTS.put(Items.NOTE_BLOCK, 33);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LOOM, 20 );
+        INTELLIGENCE_REQUIREMENTS.put(Items.SMITHING_TABLE, 50);
+        INTELLIGENCE_REQUIREMENTS.put(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 70);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BOW, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.CROSSBOW, 40);
+        INTELLIGENCE_REQUIREMENTS.put(Items.MACE, 75);
+        INTELLIGENCE_REQUIREMENTS.put(Items.WIND_CHARGE, 50);
+        INTELLIGENCE_REQUIREMENTS.put(Items.FIREWORK_ROCKET, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.FLINT_AND_STEEL, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.LECTERN, 30);
+
+        // woods [
+
+            // boats
+        INTELLIGENCE_REQUIREMENTS.put(Items.OAK_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.CHERRY_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.ACACIA_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BAMBOO_RAFT, 25);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DARK_OAK_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.MANGROVE_BOAT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.OAK_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.CHERRY_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.ACACIA_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BAMBOO_CHEST_RAFT, 30);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DARK_OAK_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_CHEST_BOAT, 35);
+        INTELLIGENCE_REQUIREMENTS.put(Items.MANGROVE_CHEST_BOAT, 35);
+
+            // doors
+
+        INTELLIGENCE_REQUIREMENTS.put(Items.OAK_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.ACACIA_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.DARK_OAK_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.CHERRY_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.BAMBOO_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_DOOR, 20);
+
+
+
+    }
+
+    public static void register() {
+        // This will be handled via mixin to intercept crafting
+    }
+
+    public static boolean canCraft(ServerPlayerEntity player, Item item) {
+        if (!INTELLIGENCE_REQUIREMENTS.containsKey(item)) {
+            return true; // No requirement
+        }
+
+        int required = INTELLIGENCE_REQUIREMENTS.get(item);
+        int current = IntelligenceManager.getIntelligence(player);
+        return current >= required;
+    }
+
+    public static int getRequirement(Item item) {
+        return INTELLIGENCE_REQUIREMENTS.getOrDefault(item, 0);
+    }
+
+    public static boolean hasRequirement(Item item) {
+        return INTELLIGENCE_REQUIREMENTS.containsKey(item);
+    }
+}
