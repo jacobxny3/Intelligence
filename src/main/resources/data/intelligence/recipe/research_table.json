@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BAB",
+    "BCB",
+    "BAB"
+  ],
+  "key": {
+    "A": { "item": "minecraft:amethyst_shard" },
+    "B": { "item": "minecraft:oak_planks" },
+    "C": { "item": "minecraft:book"}
+  },
+  "result": {
+    "id": "intelligence:research_table",
+    "count": 1
+  }
+}

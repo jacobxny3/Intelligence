@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+
 public class IntelligenceManager {
     private static final Map<UUID, Integer> intelligenceData = new HashMap<>();
 
@@ -15,7 +16,10 @@ public class IntelligenceManager {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (server.getTicks() % 20 == 0) { // Every second
                 for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-                    syncToClient(player);
+                    if (player.networkHandler != null) {
+                        syncToClient(player);
+                    }
+
                 }
             }
         });
@@ -27,9 +31,11 @@ public class IntelligenceManager {
     }
 
     public static void setIntelligence(ServerPlayerEntity player, int amount) {
-        UUID uuid = player.getUuid();
-        intelligenceData.put(uuid, amount);
-        syncToClient(player);
+        intelligenceData.put(player.getUuid(), amount);
+
+        if (player.networkHandler != null) { // ✔ only send when connection exists
+            syncToClient(player);
+        }
     }
 
     public static void addIntelligence(ServerPlayerEntity player, int amount) {
@@ -38,7 +44,8 @@ public class IntelligenceManager {
     }
 
     private static void syncToClient(ServerPlayerEntity player) {
-        // Send intelligence value to client for HUD display
+        // Send intelligence value and research data to client for HUD display
         IntelligenceNetworking.sendIntelligenceUpdate(player, getIntelligence(player));
+        IntelligenceNetworking.sendResearchSync(player, ResearchManager.getUnlockedItems(player));
     }
 }
