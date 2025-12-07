@@ -2,6 +2,7 @@ package com.intelligence.mixin;
 
 import com.intelligence.CraftingRestrictions;
 import com.intelligence.IntelligenceManager;
+import com.intelligence.ResearchManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.CraftingResultSlot;
@@ -12,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 @Mixin(Slot.class)
 public class SlotMixin {
 
@@ -25,24 +25,18 @@ public class SlotMixin {
             ItemStack stack = slot.getStack();
 
             if (!stack.isEmpty() && CraftingRestrictions.hasRequirement(stack.getItem())) {
+                // Check if already researched
+                if (ResearchManager.isUnlocked(serverPlayer, stack.getItem())) {
+                    return; // Allow crafting
+                }
+
                 if (!CraftingRestrictions.canCraft(serverPlayer, stack.getItem())) {
                     int required = CraftingRestrictions.getRequirement(stack.getItem());
                     int current = IntelligenceManager.getIntelligence(serverPlayer);
 
-                    player.sendMessage(Text.literal("§cInsufficient Intelligence! Requires " + required + " (You have " + current + ")"), true);
+                    player.sendMessage(Text.literal("§cInsufficient Intelligence! Requires " + required + " (You have " + current + ") §7[Research at Research Table]"), true);
                     cir.setReturnValue(false);
                 }
-            }
-            int amount = stack.getCount();
-            if (stack.getItem() == net.minecraft.item.Items.BOOK) {
-                IntelligenceManager.addIntelligence(serverPlayer, amount * 3);
-                player.sendMessage(Text.literal("§a+3 Intelligence! (Crafted a book)"), true);
-            } else if (stack.getItem() == net.minecraft.item.Items.BOOKSHELF) {
-                IntelligenceManager.addIntelligence(serverPlayer, amount * 5);
-                player.sendMessage(Text.literal("§a+5 Intelligence! (Crafted a bookshelf)"), true);
-            } else if (stack.getItem() == net.minecraft.item.Items.ENCHANTED_BOOK) {
-                IntelligenceManager.addIntelligence(serverPlayer,amount * 8);
-                player.sendMessage(Text.literal("§a+8 Intelligence! (Enchanted a book)"), true);
             }
         }
     }

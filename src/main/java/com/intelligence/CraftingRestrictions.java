@@ -1,8 +1,10 @@
 package com.intelligence;
 
+import com.intelligence.block.ModBlocks;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.CraftingRecipe;
@@ -99,6 +101,7 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.FIREWORK_ROCKET, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.FLINT_AND_STEEL, 25);
         INTELLIGENCE_REQUIREMENTS.put(Items.LECTERN, 30);
+        INTELLIGENCE_REQUIREMENTS.put(ModBlocks.RESEARCH_TABLE.asItem(), 50);
 
         // woods [
 
@@ -127,6 +130,7 @@ public class CraftingRestrictions {
             // doors
 
         INTELLIGENCE_REQUIREMENTS.put(Items.OAK_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.ACACIA_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.DARK_OAK_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_DOOR, 20);
@@ -134,7 +138,6 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.BAMBOO_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.PALE_OAK_DOOR, 20);
-
 
 
     }
