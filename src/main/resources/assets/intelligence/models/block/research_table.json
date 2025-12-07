@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "intelligence:block/research_table_bottom",
+    "up": "intelligence:block/research_table_top",
+    "north": "intelligence:block/research_table_side",
+    "south": "intelligence:block/research_table_side",
+    "west": "intelligence:block/research_table_side",
+    "east": "intelligence:block/research_table_side",
+    "particle": "intelligence:block/research_table_top"
+  }
+}

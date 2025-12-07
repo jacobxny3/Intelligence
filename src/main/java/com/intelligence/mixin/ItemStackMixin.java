@@ -1,7 +1,9 @@
 package com.intelligence.mixin;
 
 import com.intelligence.CraftingRestrictions;
+import com.intelligence.ResearchManager;
 import com.intelligence.client.IntelligenceModClient;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,10 +29,17 @@ public abstract class ItemStackMixin {
         if (CraftingRestrictions.hasRequirement(this.getItem())) {
             int required = CraftingRestrictions.getRequirement(this.getItem());
             int current = IntelligenceModClient.getClientIntelligence();
+            MinecraftClient client = MinecraftClient.getInstance();
+            boolean isUnlocked = client.player != null &&
+                    ResearchManager.isUnlockedClient(client.player.getUuid(), this.getItem());
+
 
             List<Text> tooltip = cir.getReturnValue();
             tooltip.add(Text.literal("Crafting Info:"));
-            if (current >= required) {
+            if (isUnlocked) {
+                tooltip.add(Text.literal("§a✓ Researched (Free to craft)"));
+            }
+            else if (current >= required) {
                 tooltip.add(Text.literal("§7Intelligence Required: §a" + required));
             } else {
                 tooltip.add(Text.literal("§7Intelligence Required: §c" + required + " §7(You have §c" + current + "§7)"));

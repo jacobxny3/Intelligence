@@ -1,30 +1,47 @@
 package com.intelligence.mixin;
 
 import com.intelligence.CraftingRestrictions;
+import com.intelligence.ResearchManager;
 import com.intelligence.client.IntelligenceModClient;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.CraftingResultSlot;
 import net.minecraft.screen.slot.Slot;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HandledScreen.class)
-public class HandledScreenMixin {
+public abstract class HandledScreenMixin {
+
+    @Unique
+    public abstract Item getItem();
+
+
+    @Unique
+    MinecraftClient client = MinecraftClient.getInstance();
+
+
 
     @Inject(method = "drawSlot", at = @At("TAIL"))
     private void drawIntelligenceIndicator(DrawContext context, Slot slot, CallbackInfo ci) {
         if (slot instanceof CraftingResultSlot) {
             ItemStack stack = slot.getStack();
 
+            boolean isUnlocked = client.player != null &&
+                    ResearchManager.isUnlockedClient(client.player.getUuid(), stack.getItem());
+
+
             if (!stack.isEmpty() && CraftingRestrictions.hasRequirement(stack.getItem())) {
                 int required = CraftingRestrictions.getRequirement(stack.getItem());
                 int current = IntelligenceModClient.getClientIntelligence();
 
-                if (current < required) {
+                if (current < required && !isUnlocked) {
                     // Draw a red overlay on the slot
                     int x = slot.x;
                     int y = slot.y;
