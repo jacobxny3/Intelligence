@@ -1,6 +1,7 @@
 package com.intelligence.mixin;
 
 import com.intelligence.CraftingRestrictions;
+import com.intelligence.ResearchManager;
 import com.intelligence.client.IntelligenceModClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -25,10 +27,17 @@ public abstract class ItemStackMixin {
         if (CraftingRestrictions.hasRequirement(this.getItem())) {
             int required = CraftingRestrictions.getRequirement(this.getItem());
             int current = IntelligenceModClient.getClientIntelligence();
+            Minecraft client = Minecraft.getInstance();
+            boolean isUnlocked = client.player != null &&
+                    ResearchManager.isUnlockedClient(client.player.getUUID(), this.getItem());
+
 
             List<Component> tooltip = cir.getReturnValue();
             tooltip.add(Component.literal("Crafting Info:"));
-            if (current >= required) {
+            if (isUnlocked) {
+                tooltip.add(Component.literal("§a✓ Researched (Free to craft)"));
+            }
+            else if (current >= required) {
                 tooltip.add(Component.literal("§7Intelligence Required: §a" + required));
             } else {
                 tooltip.add(Component.literal("§7Intelligence Required: §c" + required + " §7(You have §c" + current + "§7)"));

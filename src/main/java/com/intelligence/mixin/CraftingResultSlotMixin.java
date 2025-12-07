@@ -2,6 +2,7 @@ package com.intelligence.mixin;
 
 import com.intelligence.CraftingRestrictions;
 import com.intelligence.IntelligenceManager;
+import com.intelligence.ResearchManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,12 +19,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.ItemStack;
 
+
 @Mixin(ResultSlot.class)
 public abstract class CraftingResultSlotMixin {
 
     @Shadow @Final private Player player;
 
-    @Unique
     private static final Random random = new Random();
 
     @Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
@@ -31,6 +32,11 @@ public abstract class CraftingResultSlotMixin {
         if (player instanceof ServerPlayer serverPlayer) {
             // Check intelligence requirement first
             if (CraftingRestrictions.hasRequirement(stack.getItem())) {
+
+                if (ResearchManager.isUnlocked(serverPlayer, stack.getItem())) {
+                    return; // Allow crafting
+                }
+
                 if (!CraftingRestrictions.canCraft(serverPlayer, stack.getItem())) {
                     int required = CraftingRestrictions.getRequirement(stack.getItem());
                     int current = IntelligenceManager.getIntelligence(serverPlayer);
@@ -53,7 +59,7 @@ public abstract class CraftingResultSlotMixin {
                 player.displayClientMessage(Component.literal("§a+8 Intelligence! (Enchanted a book)"), true);
             } else {
                 // Lose 1-3 intelligence for crafting other items
-                int loss = random.nextInt(1, 3); // Random between 1 and 3
+                int loss = random.nextInt(3) + 1; // Random between 1 and 3
                 IntelligenceManager.addIntelligence(serverPlayer, -loss);
                 player.displayClientMessage(Component.literal("§c-" + loss + " Intelligence! (Crafting drains focus)"), true);
             }
@@ -68,6 +74,9 @@ public abstract class CraftingResultSlotMixin {
 
             if (!stack.isEmpty() && CraftingRestrictions.hasRequirement(stack.getItem())) {
                 if (!CraftingRestrictions.canCraft(serverPlayer, stack.getItem())) {
+                    if (ResearchManager.isUnlocked(serverPlayer, stack.getItem())) {
+                        return; // Allow crafting
+                    }
                     int required = CraftingRestrictions.getRequirement(stack.getItem());
                     int current = IntelligenceManager.getIntelligence(serverPlayer);
 

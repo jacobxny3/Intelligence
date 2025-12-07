@@ -1,18 +1,33 @@
 package com.intelligence.client;
 
 import com.intelligence.IntelligenceNetworking;
+import com.intelligence.ResearchManager;
+import com.intelligence.block.ModBlocks;
+import com.intelligence.block.entity.ModScreenHandlers;
+import com.intelligence.client.screen.ResearchTableScreen;
+import com.intelligence.entity.ModEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IntelligenceModClient implements ClientModInitializer {
     private static int clientIntelligence = 0;
 
     @Override
     public void onInitializeClient() {
+        // Register payload type for client
         // Register packet receiver
         ClientPlayNetworking.registerGlobalReceiver(
                 IntelligenceNetworking.IntelligenceUpdatePayload.ID,
@@ -21,11 +36,36 @@ public class IntelligenceModClient implements ClientModInitializer {
                 }
         );
 
+        ClientPlayNetworking.registerGlobalReceiver(
+                IntelligenceNetworking.ResearchSyncPayload.ID,
+                (payload, context) -> {
+                    Minecraft client = Minecraft.getInstance();
+                    if (client.player != null) {
+                        Set<Item> unlockedItems = new HashSet<>();
+                        for (String itemId : payload.unlockedItemIds()) {
+                            Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(itemId));
+                            if (item != null) {
+                                unlockedItems.add(item);
+                            }
+                        }
+                        ResearchManager.setClientUnlocked(client.player.getUUID(), unlockedItems);
+                    }
+                }
+        );
+
         // Register HUD renderer
         HudRenderCallback.EVENT.register(IntelligenceModClient::renderIntelligenceHud);
-    }
 
-    public static void renderIntelligenceHud(GuiGraphics context, DeltaTracker tickCounter) {
+
+
+        // Register screen
+        MenuScreens.register(ModScreenHandlers.RESEARCH_TABLE, ResearchTableScreen::new);
+
+        EntityRendererRegistry.register(ModEntities.FLOATING_ITEM, ItemEntityRenderer::new);
+
+}
+
+    private static void renderIntelligenceHud(GuiGraphics context, DeltaTracker tickCounter) {
         Minecraft client = Minecraft.getInstance();
 
         if (client.player == null || client.options.hideGui) {

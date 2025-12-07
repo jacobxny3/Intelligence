@@ -1,5 +1,6 @@
 package com.intelligence;
 
+import com.intelligence.block.ModBlocks;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -11,7 +12,7 @@ public class CraftingRestrictions {
     private static final Map<Item, Integer> INTELLIGENCE_REQUIREMENTS = new HashMap<>();
 
     static {
-
+        
         // netherite
         INTELLIGENCE_REQUIREMENTS.put(Items.NETHERITE_BLOCK, 75);
 
@@ -93,10 +94,11 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.FIREWORK_ROCKET, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.FLINT_AND_STEEL, 25);
         INTELLIGENCE_REQUIREMENTS.put(Items.LECTERN, 30);
+        INTELLIGENCE_REQUIREMENTS.put(ModBlocks.RESEARCH_TABLE.asItem(), 50);
 
         // woods [
 
-        // boats
+            // boats
         INTELLIGENCE_REQUIREMENTS.put(Items.OAK_BOAT, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_BOAT, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.CHERRY_BOAT, 30);
@@ -118,9 +120,10 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.MANGROVE_CHEST_BOAT, 35);
         INTELLIGENCE_REQUIREMENTS.put(Items.PALE_OAK_CHEST_BOAT, 35);
 
-        // doors
+            // doors
 
         INTELLIGENCE_REQUIREMENTS.put(Items.OAK_DOOR, 20);
+        INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.ACACIA_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.DARK_OAK_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_DOOR, 20);
@@ -128,7 +131,6 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.BAMBOO_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.PALE_OAK_DOOR, 20);
-
 
 
     }
