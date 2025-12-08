@@ -4,15 +4,16 @@ import com.intelligence.block.ModBlocks;
 import com.intelligence.block.entity.ModBlockEntities;
 import com.intelligence.block.entity.ModScreenHandlers;
 import com.intelligence.block.entity.ResearchTableScreenHandler;
-import com.intelligence.ResearchPayload;
 import com.intelligence.entity.ModEntities;
+import com.intelligence.item.ModItems;
+import com.intelligence.sound.ModSounds;
+import com.intelligence.world.ModOreGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -42,6 +43,21 @@ public class Intelligence implements ModInitializer {
         ModEntities.register();
         ModScreenHandlers.register();
         Items.register(ModBlocks.RESEARCH_TABLE);
+        Items.register(ModBlocks.CRYSTAL_ORE);
+        Items.register(ModBlocks.DEEPSLATE_CRYSTAL_ORE);
+        ModItems.register();
+        ModSounds.register();
+        ModOreGeneration.register();
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
+                .register(entries -> entries.add(ModItems.INTELLIGENCE_SHARD));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
+                .register(entries -> entries.add(ModItems.INTELLIGENCE_SWORD));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
+                .register(entries -> entries.add(ModItems.CRYSTAL));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL)
+                .register(entries -> entries.add(ModBlocks.DEEPSLATE_CRYSTAL_ORE));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL)
+                .register(entries -> entries.add(ModBlocks.CRYSTAL_ORE));;
         IntelligenceManager.register();
         CraftingRestrictions.register();
 
