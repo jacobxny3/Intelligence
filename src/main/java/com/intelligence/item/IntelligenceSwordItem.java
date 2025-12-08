@@ -84,7 +84,7 @@ public class IntelligenceSwordItem extends Item {
             attacker.getWorld().playSound(
                     null,
                     target.getX(), target.getY(), target.getZ(),
-                    SoundEvents.ENTITY_GUARDIAN_ATTACK,
+                     ModSounds.INTELLIGENCE_SHARD_USE,
                     SoundCategory.PLAYERS,
                     0.7f, 0.8f
             );
