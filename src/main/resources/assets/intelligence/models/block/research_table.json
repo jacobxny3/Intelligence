@@ -8,5 +8,7 @@
     "west": "intelligence:block/research_table_side",
     "east": "intelligence:block/research_table_side",
     "particle": "intelligence:block/research_table_top"
-  }
+  },
+    "light_emission": 7,
+    "light_color": [160, 32, 240]
 }

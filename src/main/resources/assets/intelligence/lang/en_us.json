@@ -1,4 +1,12 @@
 {
   "block.intelligence.research_table": "Research Table",
-  "container.intelligence.research_table": "Research Table"
+  "container.intelligence.research_table": "Research Table",
+  "item.intelligence.intelligence_shard": "Intelligence Shard",
+  "subtitles.intelligence.intelligence_shard_use": "Shard Broken",
+  "item.intelligence.intelligence_sword": "Intelligence Sword",
+  "item.intelligence.crystal": "Crystal",
+  "item.intelligence.deepslate_crystal_ore1": "Deepslate Crystal Ore",
+  "item.intelligence.crystal_ore": "Crystal Ore",
+  "block.intelligence.deepslate_crystal_ore1": "Deepslate Crystal Ore",
+  "block.intelligence.crystal_ore": "Crystal Ore"
 }

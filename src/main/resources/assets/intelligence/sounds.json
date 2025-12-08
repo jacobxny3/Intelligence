@@ -1,0 +1,8 @@
+{
+  "intelligence_shard_use": {
+    "subtitle": "subtitles.intelligence.intelligence_shard_use",
+    "sounds": [
+      "intelligence:intelligence_shard_use"
+    ]
+  }
+}
