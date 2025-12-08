@@ -1,6 +1,7 @@
 package com.intelligence.block.entity;
 
 import com.intelligence.Intelligence;
+import com.intelligence.block.ModBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;

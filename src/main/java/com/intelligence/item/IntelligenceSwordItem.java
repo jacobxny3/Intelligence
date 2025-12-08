@@ -1,29 +1,61 @@
 package com.intelligence.item;
 
 import com.intelligence.IntelligenceManager;
-import com.intelligence.sound.ModSounds;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
 
-public class IntelligenceSwordItem extends SwordItem {
+public class IntelligenceSwordItem extends Item {
     private static final Random RANDOM = new Random();
+    private final ToolMaterial material;
 
     public IntelligenceSwordItem(ToolMaterial toolMaterial, Settings settings) {
-        super(toolMaterial, 3, -2.4f, settings);
+        super(settings.component(
+                net.minecraft.component.DataComponentTypes.ATTRIBUTE_MODIFIERS,
+                createAttributeModifiers(toolMaterial, 3, -2.4f)
+        ));
+        this.material = toolMaterial;
+    }
+
+    private static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, int baseAttackDamage, float attackSpeed) {
+        return AttributeModifiersComponent.builder()
+                .add(
+                        EntityAttributes.ATTACK_DAMAGE,
+                        new EntityAttributeModifier(
+                                Item.BASE_ATTACK_DAMAGE_MODIFIER_ID,
+                                (double)baseAttackDamage + material.attackDamageBonus(),
+                                EntityAttributeModifier.Operation.ADD_VALUE
+                        ),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .add(
+                        EntityAttributes.ATTACK_SPEED,
+                        new EntityAttributeModifier(
+                                Item.BASE_ATTACK_SPEED_MODIFIER_ID,
+                                (double)attackSpeed,
+                                EntityAttributeModifier.Operation.ADD_VALUE
+                        ),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .build();
     }
 
     @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         // Check if the target is a player
         if (!attacker.getWorld().isClient && target instanceof ServerPlayerEntity targetPlayer) {
             // Remove 3-7 intelligence
@@ -52,22 +84,25 @@ public class IntelligenceSwordItem extends SwordItem {
             attacker.getWorld().playSound(
                     null,
                     target.getX(), target.getY(), target.getZ(),
-                    ModSounds.INTELLIGENCE_SHARD_USE,
+                    SoundEvents.ENTITY_GUARDIAN_ATTACK,
                     SoundCategory.PLAYERS,
                     0.7f, 0.8f
             );
         }
 
-        return super.postHit(stack, target, attacker);
+        super.postHit(stack, target, attacker);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, net.minecraft.world.World world, net.minecraft.entity.Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, ServerWorld world, net.minecraft.entity.Entity entity, net.minecraft.entity.EquipmentSlot slot) {
+        super.inventoryTick(stack, world, entity, slot);
 
-        // Only spawn particles when held (selected) and on server side
+        // Only spawn particles when held in main hand or off hand
         // Reduced frequency: only 20% of ticks
-        if (!world.isClient && selected && entity instanceof LivingEntity living && world instanceof ServerWorld serverWorld && RANDOM.nextFloat() < 0.2f) {
+        if (entity instanceof LivingEntity living &&
+                (slot == net.minecraft.entity.EquipmentSlot.MAINHAND || slot == net.minecraft.entity.EquipmentSlot.OFFHAND) &&
+                RANDOM.nextFloat() < 0.2f) {
+
             // Spawn particles around the sword tip
             Vec3d pos = living.getPos();
             Vec3d look = living.getRotationVec(1.0f);
@@ -86,7 +121,7 @@ public class IntelligenceSwordItem extends SwordItem {
                 double spreadY = (RANDOM.nextDouble() - 0.5) * 0.3;
                 double spreadZ = (RANDOM.nextDouble() - 0.5) * 0.3;
 
-                serverWorld.spawnParticles(
+                world.spawnParticles(
                         ParticleTypes.DRAGON_BREATH,
                         offsetX + spreadX,
                         offsetY + spreadY,
@@ -99,7 +134,7 @@ public class IntelligenceSwordItem extends SwordItem {
 
             // Add some sparkles with enchanted hit particles (less frequent)
             if (RANDOM.nextFloat() < 0.15f) {
-                serverWorld.spawnParticles(
+                world.spawnParticles(
                         ParticleTypes.ENCHANTED_HIT,
                         offsetX,
                         offsetY,
