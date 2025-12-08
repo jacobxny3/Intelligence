@@ -5,17 +5,25 @@ import com.intelligence.block.entity.ModBlockEntities;
 import com.intelligence.block.entity.ModScreenHandlers;
 import com.intelligence.block.entity.ResearchTableScreenHandler;
 import com.intelligence.entity.ModEntities;
+import com.intelligence.item.ModItems;
+import com.intelligence.sound.ModSounds;
+import com.intelligence.world.ModOreGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +36,8 @@ public class Intelligence implements ModInitializer {
 
         LOGGER.info("Intelligence Mod Initialized!");
 
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS)
+                .register(entries -> entries.accept(ModBlocks.RESEARCH_TABLE.asItem()));
 
 
         // Register networking payloads first
@@ -39,9 +49,24 @@ public class Intelligence implements ModInitializer {
         ModEntities.register();
         ModScreenHandlers.register();
         Items.registerBlock(ModBlocks.RESEARCH_TABLE);
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(entries -> entries.accept(ModBlocks.RESEARCH_TABLE));
+        Items.registerBlock(ModBlocks.CRYSTAL_ORE);
+        Items.registerBlock(ModBlocks.DEEPSLATE_CRYSTAL_ORE);
+        ModItems.register();
+        ModSounds.register();
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
+                .register(entries -> entries.accept(ModItems.INTELLIGENCE_SHARD));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.INTELLIGENCE_SWORD));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
+                .register(entries -> entries.accept(ModItems.CRYSTAL));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.NATURAL_BLOCKS)
+                .register(entries -> entries.accept(ModBlocks.DEEPSLATE_CRYSTAL_ORE));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.NATURAL_BLOCKS)
+                .register(entries -> entries.accept(ModBlocks.CRYSTAL_ORE));;
+
         IntelligenceManager.register();
         CraftingRestrictions.register();
+        ModOreGeneration.register();
 
         // Register research packet handler
         PayloadTypeRegistry.playC2S().register(ResearchPayload.ID, ResearchPayload.CODEC);
@@ -70,6 +95,28 @@ public class Intelligence implements ModInitializer {
                 IntelligenceManager.addIntelligence((ServerPlayer) player, 2);
                 player.displayClientMessage(Component.literal("§a+2 Intelligence! (Bookshelf broken)"), true);
             }
+        });
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            // Get the loot table identifier
+            Identifier id = key.identifier();
+
+            // Add to various structure chests
+            if (id.equals(Identifier.withDefaultNamespace("chests/ancient_city")) ||
+                    id.equals(Identifier.withDefaultNamespace("chests/stronghold_library")) ||
+                    id.equals(Identifier.withDefaultNamespace("chests/woodland_mansion")) ||
+                    id.equals(Identifier.withDefaultNamespace("chests/end_city_treasure")) ||
+                    id.equals(Identifier.withDefaultNamespace("chests/jungle_temple")) ||
+                    id.equals(Identifier.withDefaultNamespace("chests/buried_treasure"))) {
+
+                LootPool.Builder poolBuilder = LootPool.lootPool()
+                        .add(LootItem.lootTableItem(ModItems.INTELLIGENCE_SHARD))
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 3.0f)))
+                        .when(net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition.randomChance(0.4f)); // 40% chance
+
+                tableBuilder.withPool(poolBuilder);
+            }
+
+            // Rarer spawn in common chests
         });
     }
 }
