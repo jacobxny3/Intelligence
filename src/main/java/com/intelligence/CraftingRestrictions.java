@@ -1,6 +1,7 @@
 package com.intelligence;
 
 import com.intelligence.block.ModBlocks;
+import com.intelligence.item.ModItems;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

@@ -4,6 +4,7 @@ import com.intelligence.block.ModBlocks;
 import com.intelligence.block.entity.ModBlockEntities;
 import com.intelligence.block.entity.ModScreenHandlers;
 import com.intelligence.block.entity.ResearchTableScreenHandler;
+import com.intelligence.ResearchPayload;
 import com.intelligence.entity.ModEntities;
 import com.intelligence.item.ModItems;
 import com.intelligence.sound.ModSounds;
@@ -11,13 +12,20 @@ import com.intelligence.world.ModOreGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +55,6 @@ public class Intelligence implements ModInitializer {
         Items.register(ModBlocks.DEEPSLATE_CRYSTAL_ORE);
         ModItems.register();
         ModSounds.register();
-        ModOreGeneration.register();
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
                 .register(entries -> entries.add(ModItems.INTELLIGENCE_SHARD));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
@@ -58,8 +65,10 @@ public class Intelligence implements ModInitializer {
                 .register(entries -> entries.add(ModBlocks.DEEPSLATE_CRYSTAL_ORE));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL)
                 .register(entries -> entries.add(ModBlocks.CRYSTAL_ORE));;
+
         IntelligenceManager.register();
         CraftingRestrictions.register();
+        ModOreGeneration.register();
 
         // Register research packet handler
         PayloadTypeRegistry.playC2S().register(ResearchPayload.ID, ResearchPayload.CODEC);
@@ -88,6 +97,28 @@ public class Intelligence implements ModInitializer {
                 IntelligenceManager.addIntelligence((ServerPlayerEntity) player, 2);
                 player.sendMessage(Text.literal("§a+2 Intelligence! (Bookshelf broken)"), true);
             }
+        });
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            // Get the loot table identifier
+            Identifier id = key.getValue();
+
+            // Add to various structure chests
+            if (id.equals(Identifier.ofVanilla("chests/ancient_city")) ||
+                    id.equals(Identifier.ofVanilla("chests/stronghold_library")) ||
+                    id.equals(Identifier.ofVanilla("chests/woodland_mansion")) ||
+                    id.equals(Identifier.ofVanilla("chests/end_city_treasure")) ||
+                    id.equals(Identifier.ofVanilla("chests/jungle_temple")) ||
+                    id.equals(Identifier.ofVanilla("chests/buried_treasure"))) {
+
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .with(ItemEntry.builder(ModItems.INTELLIGENCE_SHARD))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 3.0f)))
+                        .conditionally(net.minecraft.loot.condition.RandomChanceLootCondition.builder(0.4f)); // 40% chance
+
+                tableBuilder.pool(poolBuilder);
+            }
+
+            // Rarer spawn in common chests
         });
     }
 }
