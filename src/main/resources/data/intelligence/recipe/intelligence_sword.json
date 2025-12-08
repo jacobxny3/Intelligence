@@ -1,17 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "BAB",
-    "BCB",
-    "BAB"
+    " A ",
+    " A ",
+    " B "
   ],
   "key": {
     "A": "intelligence:intelligence_shard",
-    "B": "minecraft:oak_planks",
-    "C": "minecraft:book"
+    "B": "minecraft:stick"
   },
   "result": {
-    "id": "intelligence:research_table",
+    "id": "intelligence:intelligence_sword",
     "count": 1
   }
 }

@@ -2,7 +2,6 @@ package com.intelligence.client;
 
 import com.intelligence.IntelligenceNetworking;
 import com.intelligence.ResearchManager;
-import com.intelligence.block.ModBlocks;
 import com.intelligence.block.entity.ModScreenHandlers;
 import com.intelligence.client.screen.ResearchTableScreen;
 import com.intelligence.entity.ModEntities;
@@ -11,7 +10,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -63,7 +61,6 @@ public class IntelligenceModClient implements ClientModInitializer {
 
         // Register screen
         HandledScreens.register(ModScreenHandlers.RESEARCH_TABLE, ResearchTableScreen::new);
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.RESEARCH_TABLE, RenderLayer.getCutout());
 
         EntityRendererRegistry.register(ModEntities.FLOATING_ITEM, ItemEntityRenderer::new);
 
