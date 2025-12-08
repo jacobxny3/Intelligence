@@ -1,17 +1,10 @@
 package com.intelligence;
 
 import com.intelligence.block.ModBlocks;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.minecraft.entity.player.PlayerEntity;
+import com.intelligence.item.ModItems;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +43,8 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.IRON_HELMET, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.IRON_BARS, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.IRON_BLOCK, 30);
-        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_CHAIN, 21);
         INTELLIGENCE_REQUIREMENTS.put(Items.COPPER_CHAINS.unaffected(), 21);
+        INTELLIGENCE_REQUIREMENTS.put(Items.IRON_CHAIN, 21);
         INTELLIGENCE_REQUIREMENTS.put(Items.IRON_TRAPDOOR, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.IRON_DOOR, 27);
         INTELLIGENCE_REQUIREMENTS.put(Items.HEAVY_WEIGHTED_PRESSURE_PLATE, 21);
@@ -103,6 +96,8 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.FLINT_AND_STEEL, 25);
         INTELLIGENCE_REQUIREMENTS.put(Items.LECTERN, 30);
         INTELLIGENCE_REQUIREMENTS.put(ModBlocks.RESEARCH_TABLE.asItem(), 50);
+        INTELLIGENCE_REQUIREMENTS.put(ModItems.INTELLIGENCE_SHARD, 30);
+        INTELLIGENCE_REQUIREMENTS.put(ModItems.INTELLIGENCE_SWORD, 45);
 
         // woods [
 
@@ -116,7 +111,6 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_BOAT, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_BOAT, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.MANGROVE_BOAT, 30);
-        INTELLIGENCE_REQUIREMENTS.put(Items.PALE_OAK_BOAT, 30);
         INTELLIGENCE_REQUIREMENTS.put(Items.OAK_CHEST_BOAT, 35);
         INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_CHEST_BOAT, 35);
         INTELLIGENCE_REQUIREMENTS.put(Items.CHERRY_CHEST_BOAT, 35);
@@ -126,19 +120,16 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_CHEST_BOAT, 35);
         INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_CHEST_BOAT, 35);
         INTELLIGENCE_REQUIREMENTS.put(Items.MANGROVE_CHEST_BOAT, 35);
-        INTELLIGENCE_REQUIREMENTS.put(Items.PALE_OAK_CHEST_BOAT, 35);
 
             // doors
 
         INTELLIGENCE_REQUIREMENTS.put(Items.OAK_DOOR, 20);
-        INTELLIGENCE_REQUIREMENTS.put(Items.SPRUCE_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.ACACIA_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.DARK_OAK_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.BIRCH_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.CHERRY_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.BAMBOO_DOOR, 20);
         INTELLIGENCE_REQUIREMENTS.put(Items.JUNGLE_DOOR, 20);
-        INTELLIGENCE_REQUIREMENTS.put(Items.PALE_OAK_DOOR, 20);
 
 
     }
