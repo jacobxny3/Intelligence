@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "intelligence:item/intelligence_sword"
+  }
+}
