@@ -1,6 +1,7 @@
 package com.intelligence;
 
 import com.intelligence.block.ModBlocks;
+import com.intelligence.item.ModItems;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -95,6 +96,8 @@ public class CraftingRestrictions {
         INTELLIGENCE_REQUIREMENTS.put(Items.FLINT_AND_STEEL, 25);
         INTELLIGENCE_REQUIREMENTS.put(Items.LECTERN, 30);
         INTELLIGENCE_REQUIREMENTS.put(ModBlocks.RESEARCH_TABLE.asItem(), 50);
+        INTELLIGENCE_REQUIREMENTS.put(ModItems.INTELLIGENCE_SWORD, 45);
+        INTELLIGENCE_REQUIREMENTS.put(ModItems.INTELLIGENCE_SHARD, 30);
 
         // woods [
 
