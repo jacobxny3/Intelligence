@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Intelligence implements ModInitializer {
-    public static final String MOD_ID = "assets/intelligence";
+    public static final String MOD_ID = "intelligence";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
